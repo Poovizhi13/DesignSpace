@@ -19,11 +19,19 @@ export default function RoomDesigner() {
     selectedFurniture,
     viewMode,
     setViewMode,
+    snapToGrid,
+    setSnapToGrid,
     addFurniture,
     deleteFurniture,
     updateFurniture,
     selectFurniture,
-    resetScene
+    resetScene,
+    saveLayout,
+    loadLayout,
+    undo,
+    redo,
+    canUndo,
+    canRedo
   } = useRoomDesigner();
 
   const [hasError, setHasError] = useState(false);
@@ -65,6 +73,14 @@ export default function RoomDesigner() {
         selectedFurniture={selectedFurniture}
         onDeleteFurniture={deleteFurniture}
         onUpdateFurniture={updateFurniture}
+        onSaveLayout={saveLayout}
+        onLoadLayout={loadLayout}
+        snapToGrid={snapToGrid}
+        onSnapToGridChange={setSnapToGrid}
+        onUndo={undo}
+        onRedo={redo}
+        canUndo={canUndo}
+        canRedo={canRedo}
       />
 
       {/* 3D Canvas */}
@@ -147,6 +163,7 @@ export default function RoomDesigner() {
               onSelect={selectFurniture}
               onUpdate={updateFurniture}
               roomBounds={{ width: roomWidth, length: roomLength }}
+              snapToGrid={snapToGrid}
             />
           ))}
         </Suspense>

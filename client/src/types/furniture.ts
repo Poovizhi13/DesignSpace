@@ -1,4 +1,4 @@
-export type FurnitureType = 'bed' | 'chair' | 'table' | 'sofa';
+export type FurnitureType = 'bed' | 'chair' | 'table' | 'sofa' | 'bookshelf' | 'desk' | 'armchair';
 
 export interface FurnitureItem {
   id: string;
@@ -11,4 +11,13 @@ export interface FurnitureItem {
 export interface RoomBounds {
   width: number;
   length: number;
+}
+
+export interface FurnitureCategory {
+  name: string;
+  items: {
+    type: FurnitureType;
+    name: string;
+    description?: string;
+  }[];
 }

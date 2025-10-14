@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
+import { useRef } from "react";
 import { 
   Eye, 
   RotateCw, 
@@ -9,7 +10,12 @@ import {
   RefreshCw, 
   Maximize, 
   Minimize,
-  Box
+  Box,
+  Download,
+  Upload,
+  Grid3x3,
+  Undo2,
+  Redo2
 } from "lucide-react";
 import { FurnitureItem } from "../../types/furniture";
 
@@ -20,6 +26,14 @@ interface ToolbarProps {
   selectedFurniture: FurnitureItem | null;
   onDeleteFurniture: (id: string) => void;
   onUpdateFurniture: (id: string, updates: Partial<FurnitureItem>) => void;
+  onSaveLayout: () => void;
+  onLoadLayout: (file: File) => void;
+  snapToGrid: boolean;
+  onSnapToGridChange: (snap: boolean) => void;
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
 }
 
 export default function Toolbar({
@@ -28,8 +42,17 @@ export default function Toolbar({
   onResetScene,
   selectedFurniture,
   onDeleteFurniture,
-  onUpdateFurniture
+  onUpdateFurniture,
+  onSaveLayout,
+  onLoadLayout,
+  snapToGrid,
+  onSnapToGridChange,
+  onUndo,
+  onRedo,
+  canUndo,
+  canRedo
 }: ToolbarProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const handleRotate = () => {
     if (selectedFurniture) {
@@ -50,6 +73,18 @@ export default function Toolbar({
   const handleDelete = () => {
     if (selectedFurniture) {
       onDeleteFurniture(selectedFurniture.id);
+    }
+  };
+
+  const handleLoadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      onLoadLayout(file);
+      e.target.value = '';
     }
   };
 
@@ -120,6 +155,69 @@ export default function Toolbar({
               Click on furniture to select and edit
             </span>
           )}
+
+          <Separator orientation="vertical" className="h-8" />
+
+          {/* Undo/Redo Buttons */}
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onUndo}
+              disabled={!canUndo}
+            >
+              <Undo2 className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onRedo}
+              disabled={!canRedo}
+            >
+              <Redo2 className="w-4 h-4" />
+            </Button>
+          </div>
+
+          <Separator orientation="vertical" className="h-8" />
+
+          {/* Grid Snap Toggle */}
+          <Button
+            variant={snapToGrid ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => onSnapToGridChange(!snapToGrid)}
+          >
+            <Grid3x3 className="w-4 h-4 mr-1" />
+            Snap
+          </Button>
+
+          <Separator orientation="vertical" className="h-8" />
+
+          {/* Save/Load Buttons */}
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onSaveLayout}
+            >
+              <Download className="w-4 h-4 mr-1" />
+              Save
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLoadClick}
+            >
+              <Upload className="w-4 h-4 mr-1" />
+              Load
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </div>
 
           <Separator orientation="vertical" className="h-8" />
 
