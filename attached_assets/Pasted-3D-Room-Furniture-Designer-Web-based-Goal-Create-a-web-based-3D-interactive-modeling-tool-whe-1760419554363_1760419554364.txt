@@ -1,0 +1,142 @@
+3D Room & Furniture Designer (Web-based)”
+
+Goal:
+Create a web-based 3D interactive modeling tool where users can design and customize a room layout and add furniture models. The app should support both 2D (top-view blueprint) and 3D visualization, with measurement units in feet and interactive scaling and movement of furniture.
+
+🏗️ Project Overview
+
+Build a 3D room and furniture modeling web app using HTML, CSS, and JavaScript (preferably with Three.js for 3D rendering).
+The project should run in a browser and be compatible with Replit’s free hosting.
+
+🎨 Core Features
+1. Room Setup
+
+User can define room width, length, and height in feet.
+
+The room is rendered as a simple 3D box or rectangular prism with visible floor and walls.
+
+Measurements update dynamically when user changes room size (using sliders or input boxes).
+
+2. Furniture Management
+
+Furniture models (e.g., chair.glb, table.glb, bed.glb, sofa.glb) are imported from a local /models/ folder.
+
+Furniture items are categorized (e.g., Seating, Storage, Decor).
+
+Developer can easily add new furniture by placing .glb or .obj models in the folder and adding entries to a JSON file (e.g., furnitureList.json).
+
+3. Adding Furniture
+
+User can choose a furniture category and select an item from a dropdown or menu.
+
+When placed, furniture appears at a default position inside the room and can be:
+
+Moved (dragged along X/Z plane)
+
+Rotated
+
+Scaled up or down
+
+Deleted
+
+4. Measurement System
+
+All measurements (room dimensions, furniture size, distance from wall) are displayed in feet.
+
+Include grid or floor markers in 1-foot increments for reference.
+
+5. 2D/3D View Toggle
+
+User can switch between:
+
+3D Mode: Full perspective view of the room with furniture.
+
+2D Mode: Top-down orthographic view (like a floor plan or blueprint).
+
+Switching retains all furniture positions and scales.
+
+6. Controls
+
+Use OrbitControls for 3D camera movement (pan, zoom, rotate).
+
+In 2D mode, lock camera to top view but allow zoom and pan.
+
+Furniture can be selected by clicking and modified via side panel controls.
+
+7. User Interface
+
+Left/Top Panel: Input for room size (width, length, height)
+
+Right Panel: Furniture categories and selection
+
+Bottom Toolbar: Buttons for:
+
+Add Object
+
+Delete Object
+
+Scale (+ / –)
+
+Toggle 2D/3D view
+
+Reset Scene
+
+8. Save/Load (Optional for later)
+
+Optionally allow users to save room layout to JSON and reload later.
+
+⚙️ Technical Requirements
+
+Frontend Only: No backend required for now.
+
+Libraries:
+
+three.js for 3D
+
+OrbitControls for camera
+
+GLTFLoader for loading furniture models
+
+dat.GUI or custom sidebar for user input
+
+Units: Use 1 foot = 0.3048 meters for scaling internally in Three.js.
+
+Folder Structure:
+
+/public
+   index.html
+   style.css
+   script.js
+   /models/
+       chair.glb
+       bed.glb
+       table.glb
+   furnitureList.json
+
+🧩 Developer Notes
+
+Furniture placement and scaling should be intuitive with click-and-drag.
+
+Room floor grid should clearly show measurement divisions (1-foot grid lines).
+
+Keep UI minimal and clean.
+
+Code should be modular — e.g., separate functions for room generation, model loading, and UI updates.
+
+Support resizing of browser window dynamically.
+
+💡 Example User Flow
+
+User opens app → prompted to set room width (e.g., 12 ft), length (e.g., 14 ft), height (e.g., 10 ft).
+
+App renders the room.
+
+User selects Furniture → Bed → Double Bed, places it, and drags to position.
+
+User scales the bed slightly smaller.
+
+Switches to 2D top view to adjust placement precisely.
+
+Switches back to 3D to preview the arrangement.
+
+Can remove or move items anytime.
