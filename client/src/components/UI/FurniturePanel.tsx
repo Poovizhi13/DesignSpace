@@ -80,7 +80,7 @@ export default function FurniturePanel({ onAddFurniture }: FurniturePanelProps) 
   };
 
   return (
-    <Card className="absolute top-4 right-4 w-80 bg-white/95 backdrop-blur-sm shadow-lg z-10">
+    <Card className="absolute top-4 right-4 w-80 bg-black text-white shadow-lg z-10">
       <CardHeader>
         <CardTitle className="text-lg">Add Furniture</CardTitle>
       </CardHeader>
@@ -91,7 +91,7 @@ export default function FurniturePanel({ onAddFurniture }: FurniturePanelProps) 
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-black text-white">
               {furnitureCategories.map((category) => (
                 <SelectItem key={category.name} value={category.name}>
                   {category.name}
@@ -110,7 +110,7 @@ export default function FurniturePanel({ onAddFurniture }: FurniturePanelProps) 
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-black text-white">
               {currentItems.map((item) => (
                 <SelectItem key={item.type} value={item.type}>
                   <div className="flex items-center gap-2">
@@ -118,7 +118,7 @@ export default function FurniturePanel({ onAddFurniture }: FurniturePanelProps) 
                     <div className="flex flex-col">
                       <span>{item.name}</span>
                       {item.description && (
-                        <span className="text-xs text-gray-500">{item.description}</span>
+                        <span className="text-xs text-gray-400">{item.description}</span>
                       )}
                     </div>
                   </div>
