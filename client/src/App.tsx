@@ -2,11 +2,13 @@ import { Suspense, useEffect, useState } from "react";
 import "@fontsource/inter";
 import RoomDesigner from "./components/RoomDesigner";
 import WebGLFallback from "./components/WebGLFallback";
+import ChatWidget from "./components/chat/ChatWidget"; // ✅ Chatbot import
 
 function checkWebGLSupport(): boolean {
   try {
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const canvas = document.createElement("canvas");
+    const gl =
+      canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
     return !!gl;
   } catch (e) {
     return false;
@@ -32,15 +34,35 @@ function App() {
     return <WebGLFallback />;
   }
 
+  // ✅ Chatbot command handler (connects chatbot with 3D logic)
+  const handleChatCommand = (type: string) => {
+    const event = new CustomEvent("add-furniture", { detail: { type } });
+    window.dispatchEvent(event);
+  };
+
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
-      <Suspense fallback={
-        <div className="flex items-center justify-center w-full h-full bg-gray-100">
-          <div className="text-lg font-medium">Loading 3D Room Designer...</div>
-        </div>
-      }>
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center w-full h-full bg-gray-100">
+            <div className="text-lg font-medium">
+              Loading 3D Room Designer...
+            </div>
+          </div>
+        }
+      >
         <RoomDesigner />
       </Suspense>
+
+      {/* 👇 Floating chatbot at bottom center */}
+      <ChatWidget onCommand={handleChatCommand} />
     </div>
   );
 }

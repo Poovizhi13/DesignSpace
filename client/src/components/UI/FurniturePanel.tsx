@@ -1,9 +1,15 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useState } from "react";
 import { FurnitureType, FurnitureCategory } from "../../types/furniture";
-import { Sofa, Armchair, Bed, BookOpen, Laptop, Table } from "lucide-react";
+import { Sofa, Armchair, Bed, BookOpen, Laptop, Table, Lightbulb, Leaf} from "lucide-react";
 
 interface FurniturePanelProps {
   onAddFurniture: (type: FurnitureType) => void;
@@ -11,49 +17,42 @@ interface FurniturePanelProps {
 
 const furnitureCategories: FurnitureCategory[] = [
   {
-    name: "Seating",
+    name: "Living Room",
     items: [
       { type: "chair", name: "Dining Chair", description: "Simple wooden chair" },
       { type: "sofa", name: "Sofa", description: "Comfortable 2-seater" },
-      { type: "armchair", name: "Armchair", description: "Cozy single seat" }
-    ]
+      { type: "table", name: "Table", description: "Cozy single seat" },
+      { type: "armchair", name: "Armchair", description: "Cozy single seat" },
+    ],
   },
   {
-    name: "Tables",
+    name: "Study Room",
     items: [
       { type: "table", name: "Dining Table", description: "Rectangular table" },
-      { type: "desk", name: "Desk", description: "Office desk with drawers" }
-    ]
-  },
-  {
-    name: "Storage",
-    items: [
-      { type: "bookshelf", name: "Bookshelf", description: "5-shelf storage unit" }
-    ]
+      { type: "desk", name: "Desk", description: "Office desk with drawers" },
+    ],
   },
   {
     name: "Bedroom",
-    items: [
-      { type: "bed", name: "Bed", description: "Standard double bed" }
-    ]
-  }
+    items: [{ type: "bed", name: "Bed", description: "Standard double bed" }],
+  },
 ];
 
 const getIconForType = (type: FurnitureType) => {
   const iconProps = { className: "w-4 h-4" };
   switch (type) {
-    case 'sofa':
-    case 'armchair':
+    case "sofa":
+    case "armchair":
       return <Sofa {...iconProps} />;
-    case 'chair':
+    case "chair":
       return <Armchair {...iconProps} />;
-    case 'bed':
+    case "bed":
       return <Bed {...iconProps} />;
-    case 'bookshelf':
+    case "bookshelf":
       return <BookOpen {...iconProps} />;
-    case 'desk':
+    case "desk":
       return <Laptop {...iconProps} />;
-    case 'table':
+    case "table":
       return <Table {...iconProps} />;
     default:
       return null;
@@ -61,10 +60,12 @@ const getIconForType = (type: FurnitureType) => {
 };
 
 export default function FurniturePanel({ onAddFurniture }: FurniturePanelProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>("Seating");
+  const [selectedCategory, setSelectedCategory] = useState<string>("Living Room");
   const [selectedFurniture, setSelectedFurniture] = useState<FurnitureType>("chair");
 
-  const currentCategory = furnitureCategories.find(cat => cat.name === selectedCategory);
+  const currentCategory = furnitureCategories.find(
+    (cat) => cat.name === selectedCategory
+  );
   const currentItems = currentCategory?.items || [];
 
   const handleAddFurniture = () => {
@@ -73,65 +74,98 @@ export default function FurniturePanel({ onAddFurniture }: FurniturePanelProps) 
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
-    const newCategory = furnitureCategories.find(cat => cat.name === category);
+    const newCategory = furnitureCategories.find(
+      (cat) => cat.name === category
+    );
     if (newCategory && newCategory.items.length > 0) {
       setSelectedFurniture(newCategory.items[0].type);
     }
   };
 
   return (
-    <Card className="absolute top-4 right-4 w-80 bg-black text-white shadow-lg z-10">
-      <CardHeader>
-        <CardTitle className="text-lg">Add Furniture</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <label className="text-sm font-medium mb-2 block">Category</label>
-          <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-black text-white">
-              {furnitureCategories.map((category) => (
-                <SelectItem key={category.name} value={category.name}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+    <>
+      {/* ✅ Override dropdown background color globally */}
+      <style>{`
+        [data-radix-popper-content-wrapper] {
+          background-color: white !important;
+          color: #111827 !important;
+          border: 1px solid #e5e7eb !important;
+        }
+        [data-radix-popper-content-wrapper] * {
+          background-color: white !important;
+          color: #111827 !important;
+        }
+      `}</style>
 
-        <div>
-          <label className="text-sm font-medium mb-2 block">Item</label>
-          <Select 
-            value={selectedFurniture} 
-            onValueChange={(value: FurnitureType) => setSelectedFurniture(value)}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-black text-white">
-              {currentItems.map((item) => (
-                <SelectItem key={item.type} value={item.type}>
-                  <div className="flex items-center gap-2">
-                    {getIconForType(item.type)}
-                    <div className="flex flex-col">
-                      <span>{item.name}</span>
-                      {item.description && (
-                        <span className="text-xs text-gray-400">{item.description}</span>
-                      )}
+      <Card className="absolute top-4 right-4 w-80 bg-white text-gray-900 shadow-lg border border-gray-200 z-10">
+        <CardHeader>
+          <CardTitle className="text-lg">Add Furniture</CardTitle>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          {/* Category Dropdown */}
+          <div>
+            <label className="text-sm font-medium mb-2 block">Room Category</label>
+            <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+              <SelectTrigger className="bg-white text-gray-900 border border-gray-300">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-white text-gray-900 border border-gray-200 shadow-md">
+                {furnitureCategories.map((category) => (
+                  <SelectItem
+                    key={category.name}
+                    value={category.name}
+                    className="hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                  >
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Item Dropdown */}
+          <div>
+            <label className="text-sm font-medium mb-2 block">Furnitures</label>
+            <Select
+              value={selectedFurniture}
+              onValueChange={(value: FurnitureType) => setSelectedFurniture(value)}
+            >
+              <SelectTrigger className="bg-white text-gray-900 border border-gray-300">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-white text-gray-900 border border-gray-200 shadow-md">
+                {currentItems.map((item) => (
+                  <SelectItem
+                    key={item.type}
+                    value={item.type}
+                    className="hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2">
+                      {getIconForType(item.type)}
+                      <div className="flex flex-col">
+                        <span>{item.name}</span>
+                        {item.description && (
+                          <span className="text-xs text-gray-500">
+                            {item.description}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-        <Button onClick={handleAddFurniture} className="w-full">
-          Add to Room
-        </Button>
-      </CardContent>
-    </Card>
+          <Button
+            onClick={handleAddFurniture}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Add to Room
+          </Button>
+        </CardContent>
+      </Card>
+    </>
   );
 }
