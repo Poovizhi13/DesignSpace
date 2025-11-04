@@ -32,20 +32,23 @@ export default function RoomDesigner() {
     redo,
     canUndo,
     canRedo,
+
+    // 🎨 newly added states
+    floorTexture,
+    setFloorTexture,
+    wallColor,
+    setWallColor,
   } = useRoomDesigner();
 
   const [hasError, setHasError] = useState(false);
 
-  // ✅ Listen for chatbot commands (e.g., "add bed", "add table")
+  // ✅ Listen for chatbot or external commands
   useEffect(() => {
     const handleAddFromChat = (e: CustomEvent) => {
       const { type } = e.detail;
       console.log("🧠 Chatbot requested furniture:", type);
-
-      // Only add furniture if the type exists in your model list
       addFurniture(type);
     };
-
     window.addEventListener("add-furniture", handleAddFromChat as EventListener);
     return () => {
       window.removeEventListener("add-furniture", handleAddFromChat as EventListener);
@@ -72,10 +75,14 @@ export default function RoomDesigner() {
 
   return (
     <div className="w-full h-full relative">
-      {/* Control Panels */}
+      {/* 🧰 Control Panels */}
       <ControlPanel
         roomDimensions={roomDimensions}
         setRoomDimensions={setRoomDimensions}
+        floorTexture={floorTexture}
+        setFloorTexture={setFloorTexture}
+        wallColor={wallColor}
+        setWallColor={setWallColor}
       />
 
       <FurniturePanel onAddFurniture={addFurniture} />
@@ -97,7 +104,7 @@ export default function RoomDesigner() {
         canRedo={canRedo}
       />
 
-      {/* 3D Canvas */}
+      {/* 🧱 3D Canvas */}
       <Canvas
         shadows
         camera={
@@ -116,7 +123,7 @@ export default function RoomDesigner() {
         onError={handleError}
         fallback={<WebGLFallback />}
       >
-        {/* Lighting */}
+        {/* 💡 Lighting */}
         <ambientLight intensity={0.4} />
         <directionalLight
           position={[roomWidth, roomHeight * 2, roomLength]}
@@ -127,7 +134,7 @@ export default function RoomDesigner() {
         />
         <pointLight position={[0, roomHeight - 1, 0]} intensity={0.5} />
 
-        {/* Controls */}
+        {/* 🕹️ Controls */}
         <OrbitControls
           enablePan={true}
           enableZoom={true}
@@ -137,21 +144,27 @@ export default function RoomDesigner() {
           minPolarAngle={viewMode === "2d" ? 0 : Math.PI / 6}
         />
 
-        {/* Gizmo Helper (only visible in 3D) */}
+        {/* 🎯 Gizmo Helper */}
         {viewMode === "3d" && (
           <GizmoHelper alignment="bottom-left" margin={[80, 80]}>
             <GizmoViewport axisColors={["red", "green", "blue"]} labelColor="black" />
           </GizmoHelper>
-        )}``
+        )}
 
         <Suspense fallback={null}>
-          {/* Room */}
-          <Room width={roomWidth} length={roomLength} height={roomHeight} />
+          {/* 🏠 Room (now receives texture + color) */}
+          <Room
+            width={roomWidth}
+            length={roomLength}
+            height={roomHeight}
+            floorTexture={floorTexture}
+            wallColor={wallColor}
+          />
 
-          {/* Grid */}
+          {/* 🧮 Grid */}
           <Grid width={roomWidth} length={roomLength} divisions={Math.max(roomWidth, roomLength)} />
 
-          {/* Furniture */}
+          {/* 🪑 Furniture */}
           {furniture.map((item) => (
             <Furniture
               key={item.id}
